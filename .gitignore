@@ -6,3 +6,4 @@ stage/
 prime/
 overlay/
 .craft/
+packaging/*.deb
