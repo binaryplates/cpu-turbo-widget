@@ -1,0 +1,10 @@
+{
+  "uuid": "cpu-turbo@blazorplate.net",
+  "name": "CPU Turbo",
+  "description": "Toggle Intel Turbo Boost, switch battery/power profile, stop the container VM, and switch GPU mode from one panel dropdown.",
+  "settings-schema": "org.gnome.shell.extensions.cpu-turbo",
+  "gettext-domain": "cpu-turbo",
+  "shell-version": ["50"],
+  "url": "https://github.com/binaryplates/cpu-turbo-widget",
+  "version": 2
+}

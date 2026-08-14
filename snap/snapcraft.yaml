@@ -1,0 +1,179 @@
+name: cpu-turbo-widget
+base: core26
+version: "1.0.13"
+title: CPU Turbo
+summary: Tray flyout to toggle Intel turbo and cool the laptop
+description: |
+  Problem
+
+  Ubuntu laptops with Intel turbo, a discrete NVIDIA GPU, and background
+  container VMs run hot and loud even when you are barely using them.
+  Boost clocks, the Performance power profile, Docker Desktop’s VM, and
+  NVIDIA drawing the screen all dump heat into the chassis. The chassis sensor
+  gets uncomfortable, fans spin up, and the usual fixes are scattered
+  across Settings, the terminal, and a logout — so people leave everything
+  on and the machine stays warm.
+
+  Solution
+
+  CPU Turbo puts the heat switches in one system-tray flyout. Turn Intel
+  turbo off, drop to a cooler battery profile, stop the container VM, and
+  pick Intel or on-demand graphics instead of NVIDIA. The panel shows CPU
+  and internal chassis-sensor temperature, a live report, and a countdown so you can see
+  whether the laptop is actually cooling. Built by BinaryPlates
+  (Mohammad Mustafa) for Ubuntu laptops.
+
+  https://blazorplate.net
+
+grade: stable
+confinement: strict
+license: MIT
+contact: https://snapcraft.io/publisher/mohammad-mustafa-1986
+issues: https://snapcraft.io/cpu-turbo-widget
+website: https://blazorplate.net
+icon: icons/hicolor/256x256/apps/cpu-turbo-widget.png
+
+plugs:
+  dot-autostart:
+    interface: personal-files
+    write:
+      - $HOME/.config/autostart
+
+platforms:
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
+
+apps:
+  cpu-turbo-widget:
+    command: bin/cpu-turbo-widget
+    desktop: share/applications/org.cpu_turbo.widget.desktop
+    common-id: org.cpu_turbo.widget
+    plugs:
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - unity7
+      - gsettings
+      - home
+      - network
+      - hardware-observe
+      - system-observe
+      - dot-autostart
+      - power-control
+    environment:
+      GDK_BACKEND: x11
+      GSK_RENDERER: cairo
+      PYTHONPATH: $SNAP/share/cpu-turbo-widget:$SNAP/usr/lib/python3/dist-packages
+      GI_TYPELIB_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/girepository-1.0
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      XDG_DATA_DIRS: $SNAP/usr/share:$SNAP/share:/usr/share
+      PATH: $SNAP/bin:$SNAP/usr/bin:/usr/bin:/bin
+
+  cpu-turbo-widget-helper:
+    command: bin/turbo-helperd
+    daemon: simple
+    restart-condition: on-failure
+    plugs:
+      - cpu-control
+      - network-bind
+    environment:
+      PATH: $SNAP/usr/bin:/usr/bin:/bin
+
+parts:
+  python-runtime:
+    plugin: nil
+    stage-packages:
+      - libpython3.14-minimal
+      - libpython3.14-stdlib
+      - python3-minimal
+      - python3.14-minimal
+
+  cpu-turbo-widget:
+    after: [python-runtime]
+    plugin: nil
+    source: .
+    stage-packages:
+      - python3-gi
+      - python3-gi-cairo
+      - python3-cairo
+      - gir1.2-gtk-4.0
+      - gir1.2-glib-2.0
+      - gir1.2-gdkpixbuf-2.0
+      - gir1.2-graphene-1.0
+      - gir1.2-harfbuzz-0.0
+      - gir1.2-pango-1.0
+      - libgtk-4-1
+    override-build: |
+      set -euo pipefail
+      I="$CRAFT_PART_INSTALL"
+      S="$CRAFT_PART_SRC"
+      mkdir -p "$I/bin" "$I/share/cpu-turbo-widget" "$I/share/applications" "$I/share/metainfo"
+      cp "$S/cpu_turbo_widget.py" "$S/perf.py" "$S/tray_sni.py" "$S/generate_icons.py" "$S/cpu-turbo.sh" \
+        "$S/turbo_helperd.py" \
+        "$I/share/cpu-turbo-widget/"
+      cp -a "$S/icons" "$I/share/cpu-turbo-widget/icons"
+      cp "$S/packaging/org.cpu_turbo.widget.desktop" "$I/share/applications/"
+      cp "$S/packaging/org.cpu_turbo.widget.metainfo.xml" "$I/share/metainfo/"
+      if [ -x /usr/bin/xprop ]; then
+        install -m 0755 /usr/bin/xprop "$I/bin/xprop"
+      fi
+      cat > "$I/bin/cpu-turbo-widget" <<'EOF'
+      #!/bin/sh
+      unset DESKTOP_STARTUP_ID
+      export GDK_BACKEND="${GDK_BACKEND:-x11}"
+      export GSK_RENDERER="${GSK_RENDERER:-cairo}"
+      PY="$SNAP/usr/bin/python3"
+      [ -x "$PY" ] || PY="$SNAP/usr/bin/python3.14"
+      [ -x "$PY" ] || PY="/usr/bin/python3"
+      exec "$PY" "$SNAP/share/cpu-turbo-widget/cpu_turbo_widget.py" "$@"
+      EOF
+      cat > "$I/bin/turbo-helperd" <<'EOF'
+      #!/bin/sh
+      PY="$SNAP/usr/bin/python3"
+      [ -x "$PY" ] || PY="$SNAP/usr/bin/python3.14"
+      [ -x "$PY" ] || PY="/usr/bin/python3"
+      exec "$PY" "$SNAP/share/cpu-turbo-widget/turbo_helperd.py"
+      EOF
+      chmod 0755 "$I/bin/cpu-turbo-widget" "$I/bin/turbo-helperd" "$I/share/cpu-turbo-widget/cpu-turbo.sh"
+      sed -i 's|^Exec=.*|Exec=cpu-turbo-widget|' "$I/share/applications/org.cpu_turbo.widget.desktop"
+    override-prime: |
+      craftctl default
+      P="${CRAFT_PRIME}"
+      rm -rf \
+        "$P/usr/lib/"*/dri \
+        "$P/usr/lib/"*/vdpau \
+        "$P/usr/lib/"*/libLLVM* \
+        "$P/usr/lib/"*/libgallium* \
+        "$P/usr/lib/"*/libVkLayer* \
+        "$P/usr/lib/"*/gstreamer-1.0 \
+        "$P/usr/share/locale" \
+        "$P/usr/share/doc" \
+        "$P/usr/share/man" \
+        "$P/usr/share/lintian" \
+        "$P/usr/share/bug" \
+        "$P/usr/share/icons/Adwaita" \
+        "$P/usr/share/fonts" \
+        "$P/usr/share/iso-codes" \
+        "$P/usr/share/xml" \
+        "$P/usr/share/gtk-4.0/emoji" \
+        "$P/usr/lib/python3.14/test" \
+        "$P/usr/lib/python3.14/idlelib" \
+        "$P/usr/lib/python3.14/turtledemo" \
+        "$P/usr/lib/python3.14/ensurepip" \
+        "$P/usr/lib/python3.14/pydoc_data" \
+        "$P/usr/lib/valgrind"
+      rm -f \
+        "$P/usr/lib/"*/libaom.so* \
+        "$P/usr/lib/"*/libjxl*.so* \
+        "$P/usr/lib/"*/libheif.so* \
+        "$P/usr/lib/"*/libhwy*.so* \
+        "$P/usr/bin/pydoc"* \
+        "$P/usr/bin/pygettext"* \
+        "$P/usr/bin/2to3"* || true
+
+lint:
+  ignore:
+    - library
+    - gpu

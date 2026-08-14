@@ -1,0 +1,10 @@
+packaging/deb-root
+packaging/*.deb
+parts
+stage
+prime
+.craft
+__pycache__
+*.pyc
+.snap
+*.snap

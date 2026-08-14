@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.cpu_turbo.widget</id>
+  <name>CPU Turbo</name>
+  <summary>Toggle Intel turbo and cool the laptop from the tray</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="net.blazorplate.binaryplates">
+    <name>BinaryPlates</name>
+  </developer>
+  <developer_name>BinaryPlates</developer_name>
+  <update_contact>mohammad.mustafa@blazorplate.net</update_contact>
+  <description>
+    <p>
+      Problem: Ubuntu laptops with Intel turbo, a discrete NVIDIA GPU, and
+      background container VMs run hot and loud even when you are barely using
+      them. Boost clocks, the Performance power profile, Docker Desktop’s VM,
+      and NVIDIA drawing the screen all dump heat into the chassis. The palm
+      rest gets uncomfortable, fans spin up, and the usual fixes are scattered
+      across Settings, the terminal, and a logout — so people leave everything
+      on and the machine stays warm.
+    </p>
+    <p>
+      Solution: CPU Turbo puts the heat switches in one system-tray flyout.
+      Turn Intel turbo off, drop to a cooler battery profile, stop the
+      container VM, and pick Intel or on-demand graphics instead of NVIDIA.
+      The panel shows CPU and internal chassis-sensor temperature, a live report, and a
+      countdown so you can see whether the laptop is actually cooling.
+      Built by BinaryPlates (Mohammad Mustafa) for Ubuntu laptops.
+      https://blazorplate.net
+    </p>
+  </description>
+  <launchable type="desktop-id">org.cpu_turbo.widget.desktop</launchable>
+  <url type="homepage">https://blazorplate.net</url>
+  <categories>
+    <category>Utility</category>
+    <category>System</category>
+  </categories>
+  <recommends>
+    <control>pointing</control>
+  </recommends>
+  <content_rating type="oars-1.1"/>
+</component>

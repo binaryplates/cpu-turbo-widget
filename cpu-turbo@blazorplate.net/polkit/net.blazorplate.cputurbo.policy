@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>BinaryPlate</vendor>
+  <vendor_url>https://blazorplate.net</vendor_url>
+
+  <action id="net.blazorplate.cputurbo.write">
+    <description>Toggle CPU Turbo Boost or switch GPU mode</description>
+    <message>Authentication is required to change CPU turbo or GPU mode</message>
+    <defaults>
+      <allow_any>auth_admin_keep</allow_any>
+      <allow_inactive>auth_admin_keep</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/libexec/cpu-turbo-helper</annotate>
+  </action>
+</policyconfig>

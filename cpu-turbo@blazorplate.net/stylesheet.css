@@ -1,0 +1,148 @@
+.cpu-turbo-header-row {
+  spacing: 8px;
+  padding: 4px 4px 8px 4px;
+  min-width: 300px;
+}
+
+.cpu-turbo-header-spacer {
+  width: 24px;
+}
+
+.cpu-turbo-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cpu-turbo-icon-btn {
+  border-radius: 9px;
+  padding: 4px;
+}
+.cpu-turbo-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.cpu-turbo-icon-btn-icon {
+  icon-size: 16px;
+}
+
+.cpu-turbo-refresh-wrap {
+  padding-top: 6px;
+}
+
+.cpu-turbo-toggle-btn {
+  min-width: 160px;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+}
+.cpu-turbo-toggle-btn.cpu-turbo-off {
+  background-color: rgba(90, 94, 102, 0.45);
+}
+.cpu-turbo-toggle-btn.cpu-turbo-on {
+  background-color: rgba(46, 139, 138, 0.82);
+}
+
+.cpu-turbo-clock-line {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  padding-top: 6px;
+}
+
+.cpu-turbo-section-head {
+  font-weight: bold;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 4px 4px 4px;
+}
+
+.cpu-turbo-chip-row {
+  spacing: 6px;
+  padding: 2px 4px;
+}
+
+.cpu-turbo-chip {
+  border-radius: 15px;
+  padding: 6px 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+}
+.cpu-turbo-chip:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.cpu-turbo-chip-active {
+  background-color: rgba(46, 139, 138, 0.82);
+  color: white;
+}
+
+.cpu-turbo-gpu-confirm {
+  padding: 4px;
+  spacing: 4px;
+}
+.cpu-turbo-gpu-confirm-label {
+  color: #e8b86d;
+  font-size: 12px;
+  padding: 0 4px 4px 4px;
+}
+
+.cpu-turbo-hero-row {
+  spacing: 24px;
+  padding: 8px 4px;
+}
+.cpu-turbo-hero-value {
+  font-size: 26px;
+  font-weight: bold;
+}
+.cpu-turbo-hero-caption {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cpu-turbo-report-meta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0 4px 4px 4px;
+}
+
+.cpu-turbo-grid {
+  padding: 0 4px;
+}
+.cpu-turbo-grid-head {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  padding-bottom: 2px;
+}
+.cpu-turbo-grid-row {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cpu-turbo-summary-box {
+  padding: 2px 4px 8px 4px;
+  spacing: 4px;
+}
+.cpu-turbo-summary-row {
+  spacing: 10px;
+  font-size: 12px;
+}
+.cpu-turbo-summary-key {
+  color: rgba(255, 255, 255, 0.55);
+  min-width: 96px;
+}
+.cpu-turbo-summary-val {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cpu-turbo-error {
+  color: #e8b86d;
+  font-size: 12px;
+  padding: 4px 4px 8px 4px;
+}
+
+.cpu-turbo-temp-cool { color: #6ee7c5; }
+.cpu-turbo-temp-ok { color: #d8efe8; }
+.cpu-turbo-temp-warm { color: #e8c36d; }
+.cpu-turbo-temp-hot { color: #f08a4b; }
+.cpu-turbo-temp-crit { color: #ef5f6a; }

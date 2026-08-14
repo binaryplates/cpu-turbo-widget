@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=CPU Turbo
+Comment=Cool an Ubuntu laptop: turbo, battery, containers, and graphics in one tray flyout
+X-Author=Mohammad Mustafa
+X-Publisher=BinaryPlates
+X-Website=https://blazorplate.net
+Exec=cpu-turbo-widget
+Icon=cpu-turbo-widget
+Terminal=false
+Categories=Utility;System;
+Keywords=cpu;turbo;temperature;battery;nvidia;
+StartupNotify=false
+StartupWMClass=cpu-turbo-widget
+X-GNOME-UsesNotifications=false
+X-GNOME-Autostart-enabled=true

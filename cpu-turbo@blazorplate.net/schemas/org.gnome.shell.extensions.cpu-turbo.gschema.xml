@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="cpu-turbo">
+  <schema path="/org/gnome/shell/extensions/cpu-turbo/" id="org.gnome.shell.extensions.cpu-turbo">
+    <key name="refresh-seconds" type="i">
+      <default>5</default>
+      <summary>Refresh interval in seconds</summary>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Privileged helper invoked via `pkexec` (see ../polkit/net.blazorplate.cputurbo.policy).
+# Installed root-owned, mode 0755, at /usr/local/libexec/cpu-turbo-helper — only
+# that installed copy is trusted by the polkit action, not this source copy.
+# Fixed, whitelisted argv only: no shell injection surface.
+set -euo pipefail
+
+NO_TURBO="/sys/devices/system/cpu/intel_pstate/no_turbo"
+
+case "${1:-}" in
+  turbo)
+    case "${2:-}" in
+      on) echo 0 > "$NO_TURBO" ;;
+      off) echo 1 > "$NO_TURBO" ;;
+      *) echo "usage: $0 turbo on|off" >&2; exit 2 ;;
+    esac
+    ;;
+  prime)
+    case "${2:-}" in
+      nvidia|on-demand|intel) exec prime-select "$2" ;;
+      *) echo "usage: $0 prime nvidia|on-demand|intel" >&2; exit 2 ;;
+    esac
+    ;;
+  *)
+    echo "usage: $0 turbo on|off | prime nvidia|on-demand|intel" >&2
+    exit 2
+    ;;
+esac
