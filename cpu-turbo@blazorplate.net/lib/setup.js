@@ -1,5 +1,7 @@
 import GLib from 'gi://GLib';
 
+import { DEPENDENCY_ERROR } from './messages.js';
+
 export const HELPER_DEST = '/usr/local/libexec/cpu-turbo-helper';
 
 export function isSystemHelperInstalled() {
@@ -12,6 +14,6 @@ export async function ensureSystemHelper() {
 
     return {
         ok: false,
-        error: 'Install cpu-turbo-helper first: clone the GitHub repo and run scripts/install-helper.sh once.',
+        error: DEPENDENCY_ERROR,
     };
 }

@@ -8,7 +8,14 @@ where a tray icon is.
 
 ## Install
 
-Install the extension from **Extension Manager** or [extensions.gnome.org](https://extensions.gnome.org), then install the helper dependency once from GitHub:
+**Not one click.** You need the extension (EGO / Extension Manager) **and** a one-time helper install from GitHub.
+
+→ **[INSTALL.md](INSTALL.md)** — step-by-step for end users
+
+Quick summary:
+
+1. Install **CPU Turbo** from Extension Manager or [extensions.gnome.org](https://extensions.gnome.org)
+2. Run once in a terminal:
 
 ```bash
 git clone https://github.com/binaryplates/cpu-turbo-widget.git
@@ -16,7 +23,7 @@ cd cpu-turbo-widget
 ./scripts/install-helper.sh
 ```
 
-Or run `./scripts/install.sh` from a git checkout to install both the helper and the extension.
+Developers: `./scripts/install.sh` installs helper + extension from a git checkout.
 
 On Wayland, a brand-new extension may need one log out/in before the panel icon appears.
 

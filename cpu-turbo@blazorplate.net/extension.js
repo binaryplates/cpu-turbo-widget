@@ -2,6 +2,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { CpuTurboIndicator } from './lib/panelButton.js';
 import { ensureSystemHelper } from './lib/setup.js';
+import { DEPENDENCY_NOTIFY_BODY } from './lib/messages.js';
 
 export default class CpuTurboExtension extends Extension {
     enable() {
@@ -10,8 +11,8 @@ export default class CpuTurboExtension extends Extension {
         ensureSystemHelper().then(result => {
             if (!result.ok) {
                 Main.notify(
-                    'CPU Turbo',
-                    result.error || 'Install cpu-turbo-helper from GitHub (scripts/install-helper.sh).',
+                    'CPU Turbo — setup required',
+                    result.error || DEPENDENCY_NOTIFY_BODY,
                 );
             }
         });

@@ -4,17 +4,11 @@ Build zip: `./scripts/ego-pack.sh` → `dist/ego/<uuid>-v<version>.zip`
 
 Upload at https://extensions.gnome.org/upload
 
-## Dependency (not in the EGO zip)
+## End-user install docs
 
-The extension package does **not** include `backend/`. Install the privileged helper once from GitHub:
+Point users to **[INSTALL.md](INSTALL.md)** in the repo (linked from EGO via metadata `url`).
 
-```bash
-git clone https://github.com/binaryplates/cpu-turbo-widget.git
-cd cpu-turbo-widget
-./scripts/install-helper.sh
-```
-
-This installs `/usr/local/libexec/cpu-turbo-helper` and the polkit policy. Turbo and GPU switching use `pkexec` against that helper after install.
+EGO description should mention: extension first, then `scripts/install-helper.sh` from GitHub.
 
 ## Review reply (74276)
 

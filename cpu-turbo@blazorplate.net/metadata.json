@@ -1,10 +1,10 @@
 {
   "uuid": "cpu-turbo@blazorplate.net",
   "name": "CPU Turbo",
-  "description": "Toggle Intel Turbo Boost, power profile, Docker Desktop, and GPU mode from the panel. Requires the cpu-turbo-helper dependency from the GitHub repo (scripts/install-helper.sh).",
+  "description": "Panel control for Intel turbo, power profile, Docker, and GPU mode. Install the extension, then run the one-time helper setup from GitHub (see INSTALL.md — Step 2: scripts/install-helper.sh).",
   "settings-schema": "org.gnome.shell.extensions.cpu-turbo",
   "gettext-domain": "cpu-turbo",
   "shell-version": ["50"],
   "url": "https://github.com/binaryplates/cpu-turbo-widget",
-  "version": 5
+  "version": 6
 }
