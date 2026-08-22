@@ -45,8 +45,8 @@ export class StatusRunner {
         const target = onOff === 'on' ? 0 : 1;
         const current = readNoTurbo();
         if (current !== target) {
-            if (!isSystemHelperInstalled() && this._extensionPath) {
-                const setup = await ensureSystemHelper(this._extensionPath);
+            if (!isSystemHelperInstalled()) {
+                const setup = await ensureSystemHelper();
                 if (!setup.ok) {
                     return { ok: false, error: setup.error || 'System setup required.' };
                 }

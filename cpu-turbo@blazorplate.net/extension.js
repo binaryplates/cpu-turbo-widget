@@ -7,11 +7,11 @@ export default class CpuTurboExtension extends Extension {
     enable() {
         this._indicator = new CpuTurboIndicator(this);
         Main.panel.addToStatusArea(this.uuid, this._indicator);
-        ensureSystemHelper(this.path).then(result => {
+        ensureSystemHelper().then(result => {
             if (!result.ok) {
                 Main.notify(
                     'CPU Turbo',
-                    result.error || 'One-time system authorization is required for turbo and GPU switching.',
+                    result.error || 'Install cpu-turbo-helper from GitHub (scripts/install-helper.sh).',
                 );
             }
         });

@@ -4,12 +4,18 @@ Build zip: `./scripts/ego-pack.sh` → `dist/ego/<uuid>-v<version>.zip`
 
 Upload at https://extensions.gnome.org/upload
 
-## One-click install
+## Dependency (not in the EGO zip)
 
-**Photos Upload** — backend is bundled in the zip; `enable()` installs pip service, D-Bus activation, and systemd user units automatically.
+The extension package does **not** include `backend/`. Install the privileged helper once from GitHub:
 
-**CPU Turbo** — on first enable (or first turbo/GPU action), the user gets **one polkit/admin prompt** to install the system helper. No separate GitHub step.
+```bash
+git clone https://github.com/binaryplates/cpu-turbo-widget.git
+cd cpu-turbo-widget
+./scripts/install-helper.sh
+```
 
-## Review notes
+This installs `/usr/local/libexec/cpu-turbo-helper` and the polkit policy. Turbo and GPU switching use `pkexec` against that helper after install.
 
-See prior EGO.md content for reviewer replies (pkexec helper, rclone, D-Bus service).
+## Review reply (74276)
+
+Removed `backend/` from the extension zip. The helper is installed separately via `scripts/install-helper.sh` in the GitHub repo linked from metadata `url`. The extension only checks for `/usr/local/libexec/cpu-turbo-helper` and shows a notification if it is missing.

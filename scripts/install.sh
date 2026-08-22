@@ -9,8 +9,6 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 UUID="cpu-turbo@blazorplate.net"
 EXT_SRC="$REPO_ROOT/$UUID"
 EXT_DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
-HELPER_DEST="/usr/local/libexec/cpu-turbo-helper"
-POLICY_DEST="/usr/share/polkit-1/actions/net.blazorplate.cputurbo.policy"
 
 if [[ $EUID -eq 0 ]]; then
   echo "Run this as your normal user, not root/sudo — it will ask for sudo only to install the privileged helper." >&2
@@ -18,8 +16,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 echo "== Step 1/3: installing the privileged helper (turbo toggle + GPU switch) =="
-sudo install -D -o root -g root -m 0755 "$EXT_SRC/backend/cpu-turbo-helper" "$HELPER_DEST"
-sudo install -D -o root -g root -m 0644 "$EXT_SRC/polkit/net.blazorplate.cputurbo.policy" "$POLICY_DEST"
+"$SCRIPT_DIR/install-helper.sh"
 
 echo "== Step 2/3: installing extension files =="
 rm -rf "$EXT_DEST"

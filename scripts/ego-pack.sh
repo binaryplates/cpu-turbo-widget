@@ -16,6 +16,7 @@ STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
 cp -a "$SRC"/. "$STAGE/"
+rm -rf "$STAGE/backend"
 glib-compile-schemas "$STAGE/schemas"
 
 (

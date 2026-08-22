@@ -8,11 +8,15 @@ where a tray icon is.
 
 ## Install
 
-Install from **Extension Manager** or [extensions.gnome.org](https://extensions.gnome.org) and enable the extension.
+Install the extension from **Extension Manager** or [extensions.gnome.org](https://extensions.gnome.org), then install the helper dependency once from GitHub:
 
-On first enable, CPU Turbo shows a **one-time authorization prompt** so turbo and GPU switching can work. No GitHub or manual setup required.
+```bash
+git clone https://github.com/binaryplates/cpu-turbo-widget.git
+cd cpu-turbo-widget
+./scripts/install-helper.sh
+```
 
-Developers can still use `scripts/install.sh` to deploy from a git checkout.
+Or run `./scripts/install.sh` from a git checkout to install both the helper and the extension.
 
 On Wayland, a brand-new extension may need one log out/in before the panel icon appears.
 
@@ -28,13 +32,11 @@ sudo.
 ## Layout
 
 ```
-lib/            PanelMenu.Button + PopupMenu UI (GJS)
-backend/        privileged helper + any scripts still needed for things
-                with no GJS equivalent (docker, systemctl, prime-select)
-polkit/         polkit action definition for the privileged helper
-schemas/        GSettings schema (refresh interval)
-scripts/        install.sh
-snap/           legacy tray Snap/deb packaging (discontinued; channels closed)
+cpu-turbo@blazorplate.net/   GNOME Shell extension (GJS)
+backend/                     privileged helper (EGO dependency, not in zip)
+polkit/                      polkit action definition for the privileged helper
+schemas/                     GSettings schema (refresh interval)
+scripts/                     install.sh, install-helper.sh, ego-pack.sh
 ```
 
 ## Config

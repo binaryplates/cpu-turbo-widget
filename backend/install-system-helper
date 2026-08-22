@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# One-time system install for CPU Turbo. Run as root via install-helper.sh.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+HELPER_SRC="$SCRIPT_DIR/cpu-turbo-helper"
+POLICY_SRC="$REPO_ROOT/cpu-turbo@blazorplate.net/polkit/net.blazorplate.cputurbo.policy"
+
+if [[ ! -f "$HELPER_SRC" || ! -f "$POLICY_SRC" ]]; then
+  echo "backend or polkit files missing under $REPO_ROOT" >&2
+  exit 2
+fi
+
+install -D -o root -g root -m 0755 "$HELPER_SRC" /usr/local/libexec/cpu-turbo-helper
+install -D -o root -g root -m 0644 "$POLICY_SRC" /usr/share/polkit-1/actions/net.blazorplate.cputurbo.policy
