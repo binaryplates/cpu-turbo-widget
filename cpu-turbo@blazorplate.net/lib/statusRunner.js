@@ -2,10 +2,12 @@ import GLib from 'gi://GLib';
 
 import { collectSnapshot, readNoTurbo } from './sysReport.js';
 import { runPrivileged } from './privileged.js';
+import { ensureSystemHelper, isSystemHelperInstalled } from './setup.js';
 
 export class StatusRunner {
-    constructor(settings) {
+    constructor(settings, extensionPath = null) {
         this._settings = settings;
+        this._extensionPath = extensionPath;
         this._timeoutId = 0;
     }
 
@@ -43,6 +45,12 @@ export class StatusRunner {
         const target = onOff === 'on' ? 0 : 1;
         const current = readNoTurbo();
         if (current !== target) {
+            if (!isSystemHelperInstalled() && this._extensionPath) {
+                const setup = await ensureSystemHelper(this._extensionPath);
+                if (!setup.ok) {
+                    return { ok: false, error: setup.error || 'System setup required.' };
+                }
+            }
             const result = await runPrivileged(['turbo', onOff]);
             if (!result.ok) {
                 const payload = { ok: false, error: result.error || 'toggle failed' };

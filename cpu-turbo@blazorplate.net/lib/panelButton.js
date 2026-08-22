@@ -10,6 +10,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { StatusRunner } from './statusRunner.js';
 import { PerfActions } from './perfActions.js';
 import { ReportRows } from './reportRows.js';
+import { readNoTurbo } from './sysReport.js';
 
 const PROFILES = [['performance', 'Performance'], ['balanced', 'Balanced'], ['power-saver', 'Saver']];
 const PRIME_MODES = [['nvidia', 'NVIDIA'], ['on-demand', 'On-demand'], ['intel', 'Intel']];
@@ -27,7 +28,7 @@ class CpuTurboIndicator extends PanelMenu.Button {
         this._icon = new St.Icon({ gicon: this._iconOff, style_class: 'system-status-icon' });
         this.add_child(this._icon);
 
-        this._statusRunner = new StatusRunner(this._settings);
+        this._statusRunner = new StatusRunner(this._settings, extension.path);
         this._perf = new PerfActions();
 
         this._nowSnap = null;
@@ -35,17 +36,47 @@ class CpuTurboIndicator extends PanelMenu.Button {
         this._busy = false;
         this._gpuPendingMode = null;
         this._actionSeq = 0;
+        this._menuOpen = false;
+        this._iconPollId = 0;
 
         this._buildMenu();
+        this._startIconPoll();
 
         this.menu.connect('open-state-changed', (menu, open) => {
+            this._menuOpen = open;
             if (open) {
+                this._stopIconPoll();
                 this._statusRunner.startPolling(payload => this._onStatus(payload));
                 this._refreshCooling();
             } else {
                 this._statusRunner.stopPolling();
+                this._startIconPoll();
             }
         });
+    }
+
+    _updatePanelIcon() {
+        const turboOn = readNoTurbo() === 0;
+        const gicon = turboOn ? this._iconOn : this._iconOff;
+        if (this._icon.gicon !== gicon)
+            this._icon.gicon = gicon;
+    }
+
+    _startIconPoll() {
+        this._stopIconPoll();
+        this._updatePanelIcon();
+        const seconds = this._settings.get_int('refresh-seconds') || 5;
+        this._iconPollId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, seconds, () => {
+            this._updatePanelIcon();
+            return GLib.SOURCE_CONTINUE;
+        });
+    }
+
+    _stopIconPoll() {
+        if (this._iconPollId) {
+            GLib.source_remove(this._iconPollId);
+            this._iconPollId = 0;
+        }
     }
 
     _wrap(widget) {
@@ -199,7 +230,7 @@ class CpuTurboIndicator extends PanelMenu.Button {
     _paint() {
         const snap = this._nowSnap || {};
         const turboOn = snap.turbo === 'ON';
-        this._icon.gicon = turboOn ? this._iconOn : this._iconOff;
+        this._updatePanelIcon();
         this._toggleBtn.label = turboOn ? '●  ON' : '●  OFF';
         this._toggleBtn.remove_style_class_name('cpu-turbo-on');
         this._toggleBtn.remove_style_class_name('cpu-turbo-off');
@@ -285,6 +316,7 @@ class CpuTurboIndicator extends PanelMenu.Button {
     }
 
     destroy() {
+        this._stopIconPoll();
         this._statusRunner?.stopPolling();
         super.destroy();
     }

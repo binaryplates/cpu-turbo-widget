@@ -7,3 +7,5 @@ prime/
 overlay/
 .craft/
 packaging/*.deb
+dist/
+*.shell-extension.zip

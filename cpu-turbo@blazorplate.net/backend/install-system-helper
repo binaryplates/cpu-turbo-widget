@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# One-time system install for CPU Turbo. Invoked via pkexec with the extension
+# root directory as the only argument. Copies the fixed-argv helper and polkit
+# policy to the system paths expected by lib/privileged.js.
+set -euo pipefail
+
+ROOT="${1:?extension root required}"
+case "$ROOT" in
+  *..*) echo "invalid extension path" >&2; exit 2 ;;
+esac
+
+HELPER_SRC="$ROOT/backend/cpu-turbo-helper"
+POLICY_SRC="$ROOT/polkit/net.blazorplate.cputurbo.policy"
+
+if [[ ! -f "$HELPER_SRC" || ! -f "$POLICY_SRC" ]]; then
+  echo "extension backend files missing under $ROOT" >&2
+  exit 2
+fi
+
+install -D -o root -g root -m 0755 "$HELPER_SRC" /usr/local/libexec/cpu-turbo-helper
+install -D -o root -g root -m 0644 "$POLICY_SRC" /usr/share/polkit-1/actions/net.blazorplate.cputurbo.policy

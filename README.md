@@ -8,15 +8,13 @@ where a tray icon is.
 
 ## Install
 
-```bash
-scripts/install.sh
-```
+Install from **Extension Manager** or [extensions.gnome.org](https://extensions.gnome.org) and enable the extension.
 
-This installs the extension to
-`~/.local/share/gnome-shell/extensions/cpu-turbo@blazorplate.net`, installs
-the polkit policy + privileged helper needed for the turbo/GPU-mode writes,
-and enables the extension. On Wayland, a brand-new extension needs one
-log out/in before GNOME Shell picks it up for the first time.
+On first enable, CPU Turbo shows a **one-time authorization prompt** so turbo and GPU switching can work. No GitHub or manual setup required.
+
+Developers can still use `scripts/install.sh` to deploy from a git checkout.
+
+On Wayland, a brand-new extension may need one log out/in before the panel icon appears.
 
 ## Privilege model
 
@@ -36,8 +34,7 @@ backend/        privileged helper + any scripts still needed for things
 polkit/         polkit action definition for the privileged helper
 schemas/        GSettings schema (refresh interval)
 scripts/        install.sh
-snap/           legacy Snap Store packaging (superseded by this extension,
-                kept only because the old Snap Store listing still exists)
+snap/           legacy tray Snap/deb packaging (discontinued; channels closed)
 ```
 
 ## Config
