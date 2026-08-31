@@ -79,6 +79,13 @@ function turboWord(noTurbo) {
     return 'unknown';
 }
 
+function parseChargeType(raw) {
+    if (!raw)
+        return { active: null, raw: null };
+    const match = raw.match(/\[([^\]]+)\]/);
+    return { active: match ? match[1] : null, raw };
+}
+
 export function readNoTurbo() {
     const raw = readTrim(NO_TURBO_PATH);
     return raw === null ? null : parseInt(raw, 10);
@@ -134,6 +141,26 @@ export function collectSnapshot() {
 
     const headroom = pkg === null ? '' : `${Math.round(tjmax - pkg)}° below limit`;
 
+    // Battery charging metrics
+    const battPath = '/sys/class/power_supply/BAT0';
+    const battCapacity = readNum(`${battPath}/capacity`);
+    const battStatus = readTrim(`${battPath}/status`);
+    const battVoltage = readNum(`${battPath}/voltage_now`);
+    const battCurrent = readNum(`${battPath}/current_now`);
+    const battStartThresh = readNum(`${battPath}/charge_control_start_threshold`);
+    const battEndThresh = readNum(`${battPath}/charge_control_end_threshold`);
+    const chargeType = parseChargeType(readTrim(`${battPath}/charge_types`));
+    
+    // Calculate charging power (Watts)
+    let battPower = null;
+    if (battVoltage !== null && battCurrent !== null)
+        battPower = (battVoltage * battCurrent) / 1000000000000;
+    
+    // Format charging current (Amps)
+    let battCurrentAmps = null;
+    if (battCurrent !== null)
+        battCurrentAmps = battCurrent / 1000000;
+
     const now = GLib.DateTime.new_now_local();
     const timestamp = now.format('%Y-%m-%d %H:%M:%S');
 
@@ -142,5 +169,9 @@ export function collectSnapshot() {
         package: pkg, skin, gpu,
         freq_avg: freqAvg, freq_max: freqMax, freq_base: freqBase,
         fan, fan_max: fanMax, load1, headroom,
+        batt_capacity: battCapacity, batt_status: battStatus,
+        batt_current: battCurrentAmps, batt_power: battPower,
+        batt_start_thresh: battStartThresh, batt_end_thresh: battEndThresh,
+        batt_charge_mode: chargeType.active, batt_charge_types: chargeType.raw,
     };
 }

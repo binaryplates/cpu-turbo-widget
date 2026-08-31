@@ -39,6 +39,7 @@ class CpuTurboIndicator extends PanelMenu.Button {
         this._menuOpen = false;
         this._iconPollId = 0;
 
+        this.menu.box.add_style_class_name('cpu-turbo-menu');
         this._buildMenu();
         this._startIconPoll();
 
@@ -94,27 +95,35 @@ class CpuTurboIndicator extends PanelMenu.Button {
         return new St.Label(params);
     }
 
+    _sectionBlock(title, ...children) {
+        const box = new St.BoxLayout({
+            vertical: true,
+            x_expand: true,
+            style_class: 'cpu-turbo-section-block',
+        });
+        box.add_child(this._sectionLabel(title, true));
+        for (const child of children)
+            box.add_child(child);
+        return box;
+    }
+
     _buildMenu() {
         this.menu.addMenuItem(this._wrap(this._buildHeader()));
         this.menu.addMenuItem(this._wrap(this._buildToggleRow()));
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this._wrap(this._sectionLabel('BATTERY', true)));
         const battery = this._buildChipRow(PROFILES, key => this._onProfile(key));
         this._profileChips = battery.buttons;
-        this.menu.addMenuItem(this._wrap(battery.row));
+        this.menu.addMenuItem(this._wrap(this._sectionBlock('POWER PROFILE', battery.row)));
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this._wrap(this._sectionLabel('CONTAINERS', true)));
-        this.menu.addMenuItem(this._wrap(this._buildContainersRow()));
+        this.menu.addMenuItem(this._wrap(this._sectionBlock('CONTAINERS', this._buildContainersRow())));
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this._wrap(this._sectionLabel('GRAPHICS', true)));
         const gpu = this._buildChipRow(PRIME_MODES, key => this._onPrime(key));
         this._primeChips = gpu.buttons;
-        this.menu.addMenuItem(this._wrap(gpu.row));
         this._gpuConfirmBox = new St.BoxLayout({ vertical: true, visible: false, style_class: 'cpu-turbo-gpu-confirm' });
-        this.menu.addMenuItem(this._wrap(this._gpuConfirmBox));
+        this.menu.addMenuItem(this._wrap(this._sectionBlock('GRAPHICS', gpu.row, this._gpuConfirmBox)));
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         this._reportRows = new ReportRows();

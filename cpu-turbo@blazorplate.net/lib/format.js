@@ -187,5 +187,37 @@ export function buildSummary(prev, now) {
     if (fan && fmax && parseFloat(fan) >= 0.9 * parseFloat(fmax))
         rows.push(['Fan', 'Near max']);
 
+    // Battery charging info
+    const battCap = now.batt_capacity;
+    const battStatus = now.batt_status;
+    const battCurrent = now.batt_current;
+    const battPower = now.batt_power;
+    const battStart = now.batt_start_thresh;
+    const battEnd = now.batt_end_thresh;
+    const battChargeMode = now.batt_charge_mode;
+
+    if (battCap !== null && battCap !== undefined) {
+        let battLine = `${battCap}%`;
+        if (battStatus)
+            battLine += ` · ${battStatus}`;
+        if (battCurrent !== null && battCurrent !== undefined && battStatus === 'Charging')
+            battLine += ` · ${battCurrent.toFixed(2)}A`;
+        if (battPower !== null && battPower !== undefined && battStatus === 'Charging')
+            battLine += ` (${battPower.toFixed(1)}W)`;
+        rows.push(['Battery', battLine]);
+    }
+    
+    if (battChargeMode)
+        rows.push(['Charge mode', battChargeMode]);
+
+    if (battChargeMode === 'Custom'
+        && battStart !== null && battStart !== undefined
+        && battEnd !== null && battEnd !== undefined) {
+        rows.push(['Charge profile', `${battStart}-${battEnd}% (Custom)`]);
+    } else if (battStart !== null && battStart !== undefined
+        && battEnd !== null && battEnd !== undefined) {
+        rows.push(['Charge thresholds', `${battStart}-${battEnd}% (inactive)`]);
+    }
+
     return rows;
 }

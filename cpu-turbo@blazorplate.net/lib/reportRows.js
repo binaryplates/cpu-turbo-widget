@@ -23,6 +23,8 @@ const GRID_ROWS = [
     ['freq_avg', 'Clock request', 'freq', null],
     ['fan', 'Fan', 'fan', null],
     ['load1', 'Load', 'load', null],
+    ['batt_current', 'Charge rate', 'current', null],
+    ['batt_power', 'Charge power', 'power', null],
 ];
 
 function fmtByKind(kind, value) {
@@ -32,7 +34,23 @@ function fmtByKind(kind, value) {
         return fmtFreq(value);
     if (kind === 'fan')
         return fmtFan(value);
+    if (kind === 'current')
+        return fmtCurrent(value);
+    if (kind === 'power')
+        return fmtPower(value);
     return fmtLoad(value);
+}
+
+function fmtCurrent(amps) {
+    if (amps === null || amps === undefined)
+        return 'n/a';
+    return `${parseFloat(amps).toFixed(2)}A`;
+}
+
+function fmtPower(watts) {
+    if (watts === null || watts === undefined)
+        return 'n/a';
+    return `${parseFloat(watts).toFixed(1)}W`;
 }
 
 export class ReportRows {
@@ -84,7 +102,7 @@ export class ReportRows {
         this._reportMeta = new St.Label({ style_class: 'cpu-turbo-report-meta', text: '' });
         this.actor.add_child(this._reportMeta);
 
-        const layout = new Clutter.GridLayout({ column_spacing: 14, row_spacing: 4 });
+        const layout = new Clutter.GridLayout({ column_spacing: 12, row_spacing: 1 });
         const grid = new St.Widget({ layout_manager: layout, style_class: 'cpu-turbo-grid', x_expand: true });
         this._gridRow(layout, 0, ['Metric', 'Prev', 'Now', 'Δ'], true);
         this._rowLabels = {};
